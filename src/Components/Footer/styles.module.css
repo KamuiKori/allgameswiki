@@ -1,0 +1,59 @@
+.footer_wrapper{
+    height: 200px;
+    border-top: 1px solid #9183A4;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    margin-top: 85px;
+    justify-content: space-between;
+    flex: 0 0 auto;
+}
+.footer_links{
+    display: flex;
+    width: 100%;
+    max-width: 270px;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+}
+.link{
+    color: #222;
+    text-align: center;
+    font-family: "Inter",sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 130%;
+    text-decoration: none;
+    margin-right: 25px;
+    margin-bottom: 15px;
+}
+.left_side{
+    padding-left: 25px;
+    display: flex;
+    flex-direction: column;
+}
+.right_side{
+    padding-right: 25px;
+}
+.scroll_back{
+    background: #99A3A6;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+}
+.copyrights{
+    color: #000;
+    font-feature-settings: 'clig' off, 'liga' off;
+    font-family: "Inter",sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 130%;
+    margin-top: 10px;
+}

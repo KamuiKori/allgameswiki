@@ -1,0 +1,35 @@
+.logo{
+    max-width: 200px;
+}
+.header{
+    height: 110px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0 38px;
+    align-items: center;
+    border-bottom: 1px solid #9183A4;
+    margin-bottom: 85px;
+    width: 100%;
+}
+.header_links{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    width: 100%;
+    max-width: 670px;
+}
+.link{
+    color: #222;
+    text-align: center;
+    font-family: "Inter",sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 130%;
+    text-decoration: none;
+    margin-right: 25px;
+}
+.link:last-of-type{
+    margin-right: 0;
+}

@@ -1,0 +1,60 @@
+.regauth_wrapper{
+    width: 100%;
+    max-width: 1250px;
+    border-radius: 10px;
+    background: #CAD7DB;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 26px 0;
+}
+.wrap{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.form_title{
+    color: #000;
+    font-feature-settings: 'clig' off, 'liga' off;
+    font-family: 'Inter',sans-serif;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 160%;
+    letter-spacing: -0.4px;
+    margin-bottom: 17px;
+}
+.submit_btn{
+    width: 100%;
+    max-width: 200px;
+    height: 50px;
+    background: #99A3A6;
+    border-radius: 10px;
+    border: none;
+    color: #ffffff;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    cursor: pointer;
+}
+input{
+    width: 100%;
+    max-width: 405px;
+    height: 55px;
+    margin-bottom: 17px;
+    border-radius: 10px;
+    border: none;
+    font-size: 20px;
+    padding-left: 15px;
+    outline: none;
+}
+input::placeholder{
+    color: #6D6D6D;
+}

@@ -1,0 +1,70 @@
+.create_new_form_wrap{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: #CAD7DB;
+    max-width: 1340px;
+    padding: 25px 90px 50px;
+}
+.create_new_form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+.form_title{
+    color: #000;
+    margin-bottom: 40px;
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 160%;
+    letter-spacing: -0.48px;
+}
+.input_wrap{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    width: 100%;
+    justify-content: space-between;
+    margin-bottom: 35px;
+}
+.input_title{
+    color: #222;
+    font-feature-settings: 'clig' off, 'liga' off;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 160%;
+    letter-spacing: -0.24px;
+    margin-bottom: 0;
+}
+.input{
+    width: 100%;
+    max-width:762px;
+}
+.textarea{
+    width: 100%;
+    max-width:762px;
+    border: none;
+    outline: none;
+    resize: none;
+    border-radius: 10px;
+    background: #FFF;
+    min-height:342px;
+    padding: 10px 17px;
+    font-size: 20px;
+}
+.select_input{
+    width: 100%;
+    max-width:762px;
+    outline: none;
+    border: none;
+    border-radius: 10px;
+    height: 55px;
+    padding: 10px 17px;
+    font-size: 20px;
+}

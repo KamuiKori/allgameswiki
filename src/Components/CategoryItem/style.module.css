@@ -1,0 +1,12 @@
+.category_item{
+    color: #000;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    text-decoration: none;
+    padding:17px;
+    border-radius: 10px;
+    background: #CAD7DB;
+    margin-right: 15px;
+}

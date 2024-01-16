@@ -1,24 +1,8 @@
 import styles from './style.module.css'
+import {useNavigate} from "react-router-dom";
 import CategoryItem from "../../Components/CategoryItem";
-function Categories(){
-
-    const categories = [
-        {
-            id:"1",
-            link:"#",
-            name:"Escape from Tarkov"
-        },
-        {
-            id:"2",
-            link:"#",
-            name:"Dota 2"
-        },
-        {
-            id:"3",
-            link:"#",
-            name:"CS2"
-        },
-    ]
+function Categories({categories}){
+    const navigate = useNavigate();
 
     return(
         <>
@@ -27,9 +11,9 @@ function Categories(){
             </p>
             <div className={styles.categories_links}>
                 {
-                    categories.map((category) =>{
+                    categories.map((cat) =>{
                         return(
-                            <CategoryItem link={category.link} name={category.name}/>
+                            <CategoryItem link={cat.link} name={cat.id} key={cat.id}/>
                         )
                     })
                 }

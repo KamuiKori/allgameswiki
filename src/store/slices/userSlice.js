@@ -31,10 +31,19 @@ const userSlice = createSlice({
             state.avatar = action.payload.avatar
             state.id = action.payload.id
             state.email = action.payload.email
-        }
+        },
+        setUserAvatar(state,action){
+            state.avatar = action.payload.avatar
+        },
+        setUserNickname(state,action){
+            state.nickname = action.payload.nickname
+        },
+        setUserDesc(state,action){
+            state.info = action.payload.info
+        },
     }
 });
 
-export const {setUser,removeUser,setUserInfo} = userSlice.actions;
+export const {setUser,removeUser,setUserInfo,setUserAvatar,setUserNickname,setUserDesc} = userSlice.actions;
 
 export default userSlice.reducer;

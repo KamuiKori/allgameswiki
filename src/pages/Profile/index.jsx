@@ -4,7 +4,7 @@ import {getDatabase, ref, child, get,update} from "firebase/database";
 import { ref as sRef } from 'firebase/storage';
 import {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {setUserInfo} from "../../store/slices/userSlice";
+import {setUserInfo, setUserNickname,setUserDesc,setUserAvatar} from "../../store/slices/userSlice";
 import { getStorage, uploadBytesResumable,getDownloadURL } from "firebase/storage";
 import { initializeApp } from "firebase/app";
 
@@ -15,27 +15,10 @@ function Profile() {
     const user = useSelector((state) => state.user);
     const dispatch = useDispatch();
     const [isEditing, setIsEditing] = useState(false);
-    const [editUserAvatar, setEditUserAvatar] = useState();
-    const [nickname, setNickname] = useState();
-    const [userInfoState, setUserInfoState] = useState();
+    const [editUserAvatar, setEditUserAvatar] = useState(null);
+    const [nickname, setNickname] = useState("");
+    const [userInfoState, setUserInfoState] = useState("");
     const storage = getStorage();
-
-        get(child(dbRef, `users/${userId}`)).then((snapshot) => {
-            if (snapshot.exists()) {
-                dispatch(setUserInfo({
-                    "nickname": snapshot.val().nickname,
-                    "info": snapshot.val().info,
-                    "avatar": snapshot.val().profilePicture,
-                    "email": snapshot.val().email,
-                    "id": snapshot.val().id,
-                }));
-            } else {
-                console.log("No data available");
-            }
-        }).catch((error) => {
-            console.error(error);
-        });
-
 
     function editProfileHandler(direction) {
         if (direction === "edit") {
@@ -46,26 +29,49 @@ function Profile() {
     }
 
     function saveInfoHandler() {
-        const avatarName = editUserAvatar.name.split(".")[0]
-        const storageRef = sRef(storage, 'userAvatars/'+ userId + "/" + avatarName);
-        const uploadTask = uploadBytesResumable(storageRef, editUserAvatar);
-        uploadTask.on('state_changed',
-            (snapshot) => {
-            },
-            (error) => {
-                console.error(error.code)
-            },
-            () => {
-                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    writeUserDataToDatabase(downloadURL)
-                    setIsEditing(false);
-                });
-            }
-        );
+        let data = {};
+
+        if(user.nickname !== nickname && nickname !== ""){
+            data["nickname"] = nickname;
+            dispatch(setUserNickname({
+                "nickname":nickname
+            }))
+        }
+        if(user.info !== userInfoState && userInfoState !== ""){
+            data["info"] = userInfoState;
+            dispatch(setUserDesc({
+                "info":userInfoState
+            }))
+        }
+        writeUserDataToDatabase(data);
+
+        setIsEditing(false);
     }
 
-    function writeUserDataToDatabase(downloadURL){
-        update(child(dbRef, `users/${userId}`),{"profilePicture":downloadURL}).then((e)=>console.log(e))
+    function writeUserDataToDatabase(data){
+        if(editUserAvatar !== null){
+            const avatarName = editUserAvatar.name.split(".")[0]
+            const storageRef = sRef(storage, 'userAvatars/'+ userId + "/" + avatarName);
+            const uploadTask = uploadBytesResumable(storageRef, editUserAvatar);
+            uploadTask.on('state_changed',
+                (snapshot) => {
+                },
+                (error) => {
+                    console.error(error.code)
+                },
+                () => {
+                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        data = {};
+                        data["profilePicture"] = downloadURL;
+                        dispatch(setUserAvatar({
+                            "avatar":downloadURL
+                        }))
+                        update(child(dbRef, `users/${userId}`),data).then((e)=>console.log(e))
+                    });
+                }
+            );
+        }
+        update(child(dbRef, `users/${userId}`),data).then((e)=>console.log(e))
     }
 
     function avatarChangeHandler(e) {
@@ -127,13 +133,13 @@ function Profile() {
                 </div>
                 <div className={styles.user_info}>
                     {!isEditing ? <p className={styles.user_name}>{user.nickname}</p> :
-                        <input type="text" name="user_nickname" className={styles.user_nickname_input} value={nickname}
+                        <input type="text" name="user_nickname" className={styles.user_nickname_input} value={nickname} placeholder="Введи свой никнейм"
                                onChange={(e) => changeNicknameHandler(e)}/>}
                     <p className={styles.descr}>
                         Описание профиля:
                     </p>
                     {!isEditing ? <p className={styles.user_text}>{user.info}</p> :
-                        <textarea type="text" name="user_info" className={styles.user_info_input} value={userInfoState}
+                        <textarea type="text" name="user_info" className={styles.user_info_input} value={userInfoState} placeholder="Здесь описание твоего профиля"
                                   onChange={(e)=>changeUserinfoHandler(e)}/>}
                 </div>
             </div>

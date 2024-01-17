@@ -5,6 +5,7 @@ import {useSelector} from "react-redux";
 import {getDownloadURL, getStorage, ref as sRef, uploadBytesResumable} from "firebase/storage";
 import {setUserInfo} from "../../store/slices/userSlice";
 import {useNavigate} from "react-router-dom";
+import createDateHook from "../../hooks/createDate";
 function CreateNew({categories}){
 
     const [postName,setPostName] = useState("");
@@ -14,7 +15,8 @@ function CreateNew({categories}){
     const [postCategory,setPostCategory] = useState("CS2");
     const user = useSelector((state) => state.user);
     const storage = getStorage();
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    let postId = "";
     function changePostNameHandler(e){
         setPostName(e.target.value)
     }
@@ -32,13 +34,12 @@ function CreateNew({categories}){
     }
     function submitHandler(e){
         e.preventDefault();
-        var createDate = new Date()
-        createDate = createDate.getHours().toString() + ":" +createDate.getMinutes().toString() + " - " + createDate.getDate() + "." + createDate.getMonth() + "." + createDate.getFullYear();
+        let createDate = createDateHook()
         var data = {
             name: postName,
             title:postTitle,
             text:postText,
-            category:postCategory,
+            category:postCategory.replaceAll(" ",""),
             userId:localStorage.getItem("userId"),
             authorNickname:user.nickname,
             createDate:createDate,
@@ -48,12 +49,13 @@ function CreateNew({categories}){
     }
     function saveInfoHandler(data) {
         const dbRef = ref(getDatabase());
-        let postId = "";
         get(child(dbRef, `posts/`)).then((snapshot) => {
             if (snapshot.exists()) {
                 postId = Object.keys(snapshot.val()).length + 1
+                data["id"] = postId
             } else {
                 postId = 1
+                data["id"] = postId
             }
         }).catch((error) => {
             console.error(error);

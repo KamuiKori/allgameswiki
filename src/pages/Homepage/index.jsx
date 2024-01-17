@@ -4,8 +4,11 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Post from "../../Components/Post";
 import Footer from "../../Components/Footer";
+import {useEffect, useState} from "react";
+import {child, get, getDatabase, ref} from "firebase/database";
 
 function Homepage() {
+    const [posts,setPosts] = useState([]);
     const settings = {
         dots: true,
         infinite: true,
@@ -30,30 +33,24 @@ function Homepage() {
             img: "https://sun9-34.userapi.com/impg/FeUac2j2Qolxyw0ruXoG5wJAUHi57PJTYSt7Ww/ANyPtNmORno.jpg?size=1102x620&quality=96&sign=483dd193d27694b54dcdc2cad12275e2&type=album"
         },
     ]
+    const dbRef = ref(getDatabase());
 
-    const posts = [
-        {
-            link:"#",
-            img:"https://sun9-70.userapi.com/impg/gT-yrtQ5ixa88VjO-IOSVCjBi5P6kJGu2ADWtw/Yf1SYngM9ik.jpg?size=780x439&quality=96&sign=e263c3763b0fd36d9ac4a8dec5226df0&type=album",
-            title:"Заголовок",
-            text:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris maximus egestas feugiat. Etiam et elit nibh. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Etiam vulputate velit nec finibus porttitor. Pellentesque non libero sed orci ornare tempor. Etiam volutpat egestas arcu in dictum. Phasellus a eros nulla. Maecenas sit amet posuere ante. Donec auctor nunc et dignissim pharetra. Nulla facilisi. Suspendisse potenti. Nunc suscipit tincidunt mattis.\n" +
-                "Duis molestie egestas pellentesque. Vivamus malesuada, ligula dapibus facilisis solli"
-        },
-        {
-            link:"#",
-            img:"https://sun9-70.userapi.com/impg/gT-yrtQ5ixa88VjO-IOSVCjBi5P6kJGu2ADWtw/Yf1SYngM9ik.jpg?size=780x439&quality=96&sign=e263c3763b0fd36d9ac4a8dec5226df0&type=album",
-            title:"Заголовок",
-            text:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris maximus egestas feugiat. Etiam et elit nibh. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Etiam vulputate velit nec finibus porttitor. Pellentesque non libero sed orci ornare tempor. Etiam volutpat egestas arcu in dictum. Phasellus a eros nulla. Maecenas sit amet posuere ante. Donec auctor nunc et dignissim pharetra. Nulla facilisi. Suspendisse potenti. Nunc suscipit tincidunt mattis.\n" +
-                "Duis molestie egestas pellentesque. Vivamus malesuada, ligula dapibus facilisis solli"
-        },
-        {
-            link:"#",
-            img:"https://sun9-70.userapi.com/impg/gT-yrtQ5ixa88VjO-IOSVCjBi5P6kJGu2ADWtw/Yf1SYngM9ik.jpg?size=780x439&quality=96&sign=e263c3763b0fd36d9ac4a8dec5226df0&type=album",
-            title:"Заголовок",
-            text:"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris maximus egestas feugiat. Etiam et elit nibh. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Etiam vulputate velit nec finibus porttitor. Pellentesque non libero sed orci ornare tempor. Etiam volutpat egestas arcu in dictum. Phasellus a eros nulla. Maecenas sit amet posuere ante. Donec auctor nunc et dignissim pharetra. Nulla facilisi. Suspendisse potenti. Nunc suscipit tincidunt mattis.\n" +
-                "Duis molestie egestas pellentesque. Vivamus malesuada, ligula dapibus facilisis solli"
-        },
-    ]
+    function getPosts(){
+        get(child(dbRef, `posts/`)).then((snapshot) => {
+            if (snapshot.exists()) {
+                var data = snapshot.val().reverse().slice(0,3);
+                setPosts(data)
+            } else {
+                setPosts([])
+            }
+        }).catch((error) => {
+            console.error(error);
+        });
+    }
+
+    useEffect(()=>{
+        getPosts();
+    },[])
     return (
         <div className={styles.home_wrapper}>
             <div className={styles.slider_wrapper}>
@@ -68,9 +65,10 @@ function Homepage() {
                 </Slider>
             </div>
             <div className={styles.newest_posts}>
+                <p className="page_title">Последние посты</p>
                 {posts.map((item)=>{
                     return(
-                        <Post link={item.link} img={item.img} text={item.text} title={item.title}/>
+                        <Post id={item.id} img={item.postPicture} text={item.text} title={item.title} key={item.id}/>
                     )
                 })}
             </div>

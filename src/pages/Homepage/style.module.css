@@ -18,5 +18,7 @@ h3{
     flex-direction: column;
     width: 100%;
     align-items: center;
-
+}
+.newest_posts{
+    width: 100%;
 }

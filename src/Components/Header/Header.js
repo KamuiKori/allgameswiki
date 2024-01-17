@@ -23,7 +23,7 @@ function Header(){
                 <>
                     <Link to="/" className={styles.link} onClick={logOutHandler}>Выйти</Link>
                     <Link to="/create_new" className={styles.link}>Создание</Link>
-                    <Link to="/profile" className={styles.link}>Профиль</Link>
+                    <Link to={"/profile/" + userId} className={styles.link}>Профиль</Link>
                 </>
                 )
         }

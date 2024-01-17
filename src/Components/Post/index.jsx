@@ -1,24 +1,19 @@
 import styles from './styles.module.css'
+import {Link} from "react-router-dom";
 
 function Post(props) {
     return (
-        <>
-            <div className={styles.post_wrapper}>
-                <a href={props.link} target="_blank">
-                    <img src={props.img} alt=""/>
-                </a>
-                <div className={styles.post_text_wrapper}>
-                    <a href={props.link} target="_blank" className={styles.post_link}>
-                        <p className={styles.post_title}>
-                            {props.title}
-                        </p>
-                    </a>
-                    <p className={styles.post_text}>
-                        {props.text}
-                    </p>
-                </div>
+        <Link to={/posts/ + props.id} className={styles.post_wrapper}>
+            <img src={props.img} alt="" className={styles.post_picture}/>
+            <div className={styles.post_text_wrapper}>
+                <p className={styles.post_title}>
+                    {props.title}
+                </p>
+                <p className={styles.post_text}>
+                    {props.text}
+                </p>
             </div>
-        </>
+        </Link>
     )
 }
 

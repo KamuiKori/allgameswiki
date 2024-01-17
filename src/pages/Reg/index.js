@@ -11,6 +11,8 @@ function Reg() {
     const [password,setPassword] = useState('');
     const [userInfo,setUserInfo] = useState('');
     const [avatar,setUserAvatar] = useState('');
+    const [isError,setIsError] = useState(false);
+    const [errorText,setErrorText] = useState("");
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -19,8 +21,8 @@ function Reg() {
         set(ref(db, 'users/' + userId), {
             id:userId,
             email: email,
-            nickname:"",
-            info:"",
+            nickname:"Пользователь №" + userId,
+            info:"Описание профиля",
             profilePicture:"https://sun9-43.userapi.com/impg/BwgB6HGhSb9QFMM3JuL4Ws_HaLoHbKZSi0Rs0g/sOhV0NLsSsM.jpg?size=295x295&quality=96&sign=f315d8710f3195fc3950cbbfc6448da5&type=album"
         });
     }
@@ -40,7 +42,26 @@ function Reg() {
                     writeUserData(user.uid,user.email)
                     navigate('/')
                 })
-                .catch(console.error)
+                .catch((error)=> {
+                    setIsError(true);
+                    let errorText = "";
+                    if(error.code === "auth/invalid-email"){
+                        setErrorText("Email должен содержать @ и доменное имя")
+                    }
+                    if(error.code === "auth/weak-password"){
+                        setErrorText("Длинна пароля должна быть более 5 символов")
+                    }
+                })
+        }
+    }
+
+    function ShowErrorMessage(props){
+        if(isError){
+            return(
+                <>
+                    <p className="error_message">Ошибка: {props.text}</p>
+                </>
+            )
         }
     }
 
@@ -63,18 +84,7 @@ function Reg() {
                         </p>
                         <input type="password" name="nickname" placeholder="Пароль" onChange={(e) =>setPassword(e.target.value)} value={password}/>
                     </div>
-                    <div className="input_wrap">
-                        <p className={styles.input_title}>
-                            Описание профиля
-                        </p>
-                        <textarea className={styles.user_info} placeholder="Описание профиля" value={userInfo} onChange={(e) =>setUserInfo(e.target.value)}></textarea>
-                    </div>
-                    <div className="input_wrap">
-                        <p className={styles.input_title}>
-                            Аватар
-                        </p>
-                        <input type="file" placeholder="Аватар" accept="image/*" id="avatar" value={avatar} className={styles.avatar} onChange={(e) =>setUserAvatar(e.target.value)}/>
-                    </div>
+                    <ShowErrorMessage text={errorText}/>
                     <button className="submit_btn" onClick={(e)=>clickHandler(e)}>
                         Зарегистрироваться
                     </button>

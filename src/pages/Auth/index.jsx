@@ -8,6 +8,7 @@ import {useNavigate} from "react-router-dom";
 function Auth(){
     const [nickname,setNickname] = useState('');
     const [password,setPassword] = useState('');
+    const [isError,setIsError] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -23,8 +24,18 @@ function Auth(){
                 localStorage.setItem('userId',user.uid);
                 navigate('/');
             })
-            .catch(console.error)
+            .catch(()=>{
+                setIsError(true);
+            })
         e.preventDefault()
+    }
+
+    function ShowErrorMessage(){
+        if(isError){
+            return(
+                <p className="error_message">Ошибка: Логин и/или пароль не совпадают</p>
+            )
+        }
     }
 
     return(
@@ -36,6 +47,7 @@ function Auth(){
                     </p>
                         <input type="text" name="nickname" placeholder="Никнейм" value={nickname} onChange={(e) =>setNickname(e.target.value)}/>
                         <input type="password" name="nickname" placeholder="Пароль" value={password} onChange={(e)=>setPassword(e.target.value)}/>
+                    {<ShowErrorMessage/>}
                     <button className="submit_btn" onClick={(e)=>clickHandler(nickname,password,e)}>
                         Авторизоваться
                     </button>

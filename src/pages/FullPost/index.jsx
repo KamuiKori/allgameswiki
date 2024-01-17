@@ -7,6 +7,7 @@ import {Link} from "react-router-dom";
 import Comment from "../../Components/Comment";
 import CreateComment from "../../Components/CreateComment";
 import {useSelector} from "react-redux";
+import createDateHook from "../../hooks/createDate";
 
 function FullPost() {
     const {id} = useParams();
@@ -40,6 +41,7 @@ function FullPost() {
                     "postPicture":data.postPicture,
                     "postCreateDate":data.createDate,
                     "author":data.authorNickname,
+                    "userId":data.userId
                 });
             } else {
                 console.log("No data available");
@@ -56,8 +58,7 @@ function FullPost() {
     }
     function createCommentHandler(e){
         let commentId = "";
-        var createDate = new Date()
-        createDate = createDate.getHours().toString() + ":" +createDate.getMinutes().toString() + " - " + createDate.getDate() + "." + createDate.getMonth() + "." + createDate.getFullYear();
+        var createDate = createDateHook();
         const data = {
             "userId":localStorage.getItem('userId'),
             "commentText":comment,
@@ -68,12 +69,16 @@ function FullPost() {
         get(child(dbRef, `posts/${id}/comments`)).then((snapshot) => {
             if (snapshot.exists()) {
                 commentId = Object.keys(snapshot.val()).length + 1;
-                update(child(dbRef, `posts/${id}/comments/${commentId}`),data).then()
-                setComment("")
+                update(child(dbRef, `posts/${id}/comments/${commentId}`),data).then(()=>{
+                    setComment("");
+                    getComments();
+                })
             } else {
                 commentId = 1;
-                set(child(dbRef, `posts/${id}/comments/${commentId}`),data).then((e)=>console.log(e))
-                setComment("")
+                set(child(dbRef, `posts/${id}/comments/${commentId}`),data).then((e)=>{
+                    setComment("")
+                    getComments();
+                })
             }
         }).catch((error) => {
             console.error(error);
@@ -82,7 +87,7 @@ function FullPost() {
     }
     return (
         <>
-            <p className="page_title">{postInfo.postName}</p>
+            <p className={styles.post_title}>{postInfo.postTitle}</p>
             <div className={styles.post_wrapper}>
                 <div className={styles.post_img_wrapper}>
                     <div className={styles.post_info}>
@@ -90,7 +95,6 @@ function FullPost() {
                         <p>Дата создания: {postInfo.postCreateDate}</p>
                     </div>
                     <img src={postInfo.postPicture} alt="post_img" className={styles.post_img} align="left"/>
-                    <p className={styles.post_title}>{postInfo.postTitle}</p>
                     <p className={styles.post_text}>{postInfo.postText}</p>
                 </div>
             </div>
@@ -98,7 +102,7 @@ function FullPost() {
                 <p className={styles.comments_title}>Комментарии</p>
                 {
                     comments.map((comment)=>{
-                        return(<Comment commentText={comment.commentText} createDate={comment.createDate} userAvatar={comment.userAvatar} userNickname={comment.userNickname}/>)
+                        return(<Comment userId={comment.userId} commentText={comment.commentText} createDate={comment.createDate} userAvatar={comment.userAvatar} userNickname={comment.userNickname}/>)
                     })
                 }
                 <CreateComment createCommentHandler={createCommentHandler} onChangeCommentText={onChangeCommentText} comment={comment}/>

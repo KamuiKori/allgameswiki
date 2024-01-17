@@ -10,6 +10,7 @@ import EmptyPost from "../Components/EmptyPost";
 import Auth from "../pages/Auth";
 import Reg from "../pages/Reg";
 import Category from "../pages/Category";
+import SearchResults from "../pages/SearchResults";
 
 export  const  PATHS = {
     MAIN:'/',
@@ -18,10 +19,11 @@ export  const  PATHS = {
     POSTS:'/posts',
     NESTED_POST:'/posts/:id',
     CATEGORY:'/categories/:id',
-    PROFILE:'/profile',
+    PROFILE:'/profile/:id',
     REG:'/reg',
     SEARCH:"/search",
-    AUTH:'/auth'
+    AUTH:'/auth',
+    SEARCH_RESULTS:'/search-results/search/:searchValue'
 }
 
 export const router = (data) =>(
@@ -36,5 +38,6 @@ export const router = (data) =>(
         <Route path={PATHS.REG} element={<Reg/>}/>
         <Route path={PATHS.SEARCH} element={<Search/>}/>
         <Route path={PATHS.CATEGORY} element={<Category/>}/>
+        <Route path={PATHS.SEARCH_RESULTS} element={<SearchResults/>}/>
     </Routes>
 )

@@ -5,8 +5,8 @@
     max-width: 1340px;
     margin-bottom: 100px;
 }
-.post_wrapper:last-of-type{
-    margin-bottom: 0;
+.post_picture{
+    max-width: 780px;
 }
 .post_text_wrapper{
     width: 100%;

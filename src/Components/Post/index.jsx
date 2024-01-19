@@ -7,10 +7,10 @@ function Post(props) {
             <img src={props.img} alt="" className={styles.post_picture}/>
             <div className={styles.post_text_wrapper}>
                 <p className={styles.post_title}>
-                    {props.title}
+                    {props.name}
                 </p>
                 <p className={styles.post_text}>
-                    {props.text}
+                    {props.text.split(" ").slice(0,200).join(" ") + " ..."}
                 </p>
             </div>
         </Link>

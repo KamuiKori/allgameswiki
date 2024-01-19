@@ -4,6 +4,7 @@ import {useEffect, useState} from "react";
 import {child, get, getDatabase, ref} from "firebase/database";
 import post from "../../Components/Post";
 import Post from "../../Components/Post";
+import convertObjToArray from "../../hooks/convertObjToArray";
 function SearchResults(){
     const {searchValue} = useParams();
     const [posts,setPosts] = useState([]);
@@ -12,10 +13,10 @@ function SearchResults(){
     function getPosts(){
         get(child(dbRef, `posts/`)).then((snapshot) => {
             if (snapshot.exists()) {
-                var data = snapshot.val();
+                var data = convertObjToArray(snapshot.val());
                 let filteredPosts = [];
                 data.forEach(function (post){
-                    if(post.text.toLowerCase().indexOf(searchValue.toLowerCase()) > -1 || post.title.toLowerCase().indexOf(searchValue.toLowerCase()) > -1){
+                    if(post.text.toLowerCase().indexOf(searchValue.toLowerCase()) > -1 || post.name.toLowerCase().indexOf(searchValue.toLowerCase()) > -1){
                         filteredPosts.push(post)
                     }
                 })
@@ -42,10 +43,12 @@ function SearchResults(){
         <>
             <p className="page_title">Результаты поиска по запросу: {searchValue}</p>
             {
-                posts.map((post)=>{
-                    return(
-                        <Post id={post.id} img={post.postPicture} text={post.text} title={post.title} key={post.id}/>
-                    )
+                posts.map((item)=>{
+                    if(!item.isDeleted){
+                        return (
+                            <Post id={item.id} img={item.postPicture} text={item.text} name={item.name} key={item.id}/>
+                        )
+                    }
                 })
             }
             {

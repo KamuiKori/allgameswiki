@@ -1,6 +1,6 @@
 import styles from './style.module.css'
 import {useDispatch} from "react-redux";
-import {setUser} from "../../store/slices/userSlice";
+import {setUser,setUserInfo} from "../../store/slices/userSlice";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import {useState} from "react";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +9,6 @@ import { getDatabase, set,ref } from "firebase/database";
 function Reg() {
     const [nickname,setNickname] = useState('');
     const [password,setPassword] = useState('');
-    const [userInfo,setUserInfo] = useState('');
     const [avatar,setUserAvatar] = useState('');
     const [isError,setIsError] = useState(false);
     const [errorText,setErrorText] = useState("");
@@ -39,6 +38,17 @@ function Reg() {
                         token:user.accessToken
                     }));
                     localStorage.setItem("userId",user.uid);
+                    localStorage.setItem("isAdmin",false.toString());
+                    dispatch(setUserInfo(
+                        {
+                            nickname:"Пользователь №" + user.uid,
+                            info : "Описание профиля",
+                            avatar:'https://sun9-43.userapi.com/impg/BwgB6HGhSb9QFMM3JuL4Ws_HaLoHbKZSi0Rs0g/sOhV0NLsSsM.jpg?size=295x295&quality=96&sign=f315d8710f3195fc3950cbbfc6448da5&type=album',
+                            id:user.uid,
+                            email:user.email,
+                            isAdmin:false
+                        }
+                    ))
                     writeUserData(user.uid,user.email)
                     navigate('/')
                 })
@@ -50,6 +60,9 @@ function Reg() {
                     }
                     if(error.code === "auth/weak-password"){
                         setErrorText("Длинна пароля должна быть более 5 символов")
+                    }
+                    if(error.code === "auth/email-already-in-use"){
+                        setErrorText("Пользователь с таким email уже зарегистрирован")
                     }
                 })
         }

@@ -1,9 +1,10 @@
 import styles from './style.module.css'
 import {useState} from "react";
 import {useDispatch} from "react-redux";
-import {setUser} from "../../store/slices/userSlice";
+import {setUser, setIsAdmin, setUserInfo} from "../../store/slices/userSlice";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import {useNavigate} from "react-router-dom";
+import {child, get, getDatabase, ref} from "firebase/database";
 
 function Auth(){
     const [nickname,setNickname] = useState('');
@@ -22,12 +23,29 @@ function Auth(){
                     token:user.accessToken,
                 }));
                 localStorage.setItem('userId',user.uid);
-                navigate('/');
+                const dbRef = ref(getDatabase());
+                get(child(dbRef, `users/${localStorage.getItem('userId')}`)).then((snapshot) => {
+                    if (snapshot.exists()) {
+                        dispatch(setUserInfo({
+                            "nickname": snapshot.val().nickname,
+                            "info": snapshot.val().info,
+                            "avatar": snapshot.val().profilePicture,
+                            "email": snapshot.val().email,
+                            "isAdmin":localStorage.getItem('isAdmin')
+                        }));
+                        localStorage.setItem('isAdmin',snapshot.val().isAdmin);
+                        navigate('/');
+                    } else {
+                        console.log("No data available");
+                    }
+                }).catch((error) => {
+                    console.error(error);
+                });
             })
             .catch(()=>{
                 setIsError(true);
             })
-        e.preventDefault()
+        e.preventDefault();
     }
 
     function ShowErrorMessage(){

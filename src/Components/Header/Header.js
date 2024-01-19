@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import styles from './header.module.css'
 import {Link} from "react-router-dom";
 import {useAuth} from "../../hooks/use-auth";
@@ -11,11 +11,15 @@ function Header(){
     const {isAuth, email} = useAuth();
     const dispatch = useDispatch();
     const [userId,setUserId] = useState(localStorage.getItem('userId'))
+    useEffect(()=>{
+        setUserId(localStorage.getItem('userId'))
+    },[localStorage.getItem('userId')])
 
     function logOutHandler(){
         dispatch(removeUser())
         setUserId("");
         localStorage.removeItem('userId');
+        localStorage.removeItem('isAdmin');
     }
     function SetBtns(){
         if(isAuth){
@@ -46,6 +50,7 @@ function Header(){
                     <div className={styles.header_links}>
                         <SetBtns/>
                         <Link to="/categories" className={styles.link}>Категории</Link>
+                        <Link to="/all_posts" className={styles.link}>Все материалы</Link>
                         <Link to="/search" className={styles.link}>Поиск</Link>
                     </div>
                 </div>

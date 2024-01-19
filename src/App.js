@@ -7,7 +7,7 @@ import Footer from "./Components/Footer";
 import {useEffect, useState} from "react";
 import {child, get, getDatabase, ref} from "firebase/database";
 import {useDispatch} from "react-redux";
-import {setUserInfo} from "./store/slices/userSlice";
+import {setIsAdmin, setUserInfo} from "./store/slices/userSlice";
 
 
 function App() {
@@ -30,6 +30,7 @@ function App() {
                         "avatar": snapshot.val().profilePicture,
                         "email": snapshot.val().email,
                         "id": localStorage.getItem('userId'),
+                        "isAdmin":localStorage.getItem('isAdmin')
                     }));
                 } else {
                     console.log("No data available");

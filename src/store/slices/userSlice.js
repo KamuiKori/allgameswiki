@@ -6,7 +6,8 @@ const initialState = {
     token:null,
     nickname:null,
     info:null,
-    avatar:null
+    avatar:null,
+    isAdmin:false
 };
 const userSlice = createSlice({
     name:"user",
@@ -31,6 +32,10 @@ const userSlice = createSlice({
             state.avatar = action.payload.avatar
             state.id = action.payload.id
             state.email = action.payload.email
+            state.isAdmin = action.payload.isAdmin
+        },
+        setIsAdmin(state,action){
+            state.isAdmin = action.payload.isAdmin
         },
         setUserAvatar(state,action){
             state.avatar = action.payload.avatar
@@ -44,6 +49,6 @@ const userSlice = createSlice({
     }
 });
 
-export const {setUser,removeUser,setUserInfo,setUserAvatar,setUserNickname,setUserDesc} = userSlice.actions;
+export const {setUser,removeUser,setUserInfo,setUserAvatar,setUserNickname,setUserDesc,setIsAdmin} = userSlice.actions;
 
 export default userSlice.reducer;

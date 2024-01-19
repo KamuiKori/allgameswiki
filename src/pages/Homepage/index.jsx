@@ -6,6 +6,7 @@ import Post from "../../Components/Post";
 import Footer from "../../Components/Footer";
 import {useEffect, useState} from "react";
 import {child, get, getDatabase, ref} from "firebase/database";
+import convertObjToArray from '../../hooks/convertObjToArray'
 
 function Homepage() {
     const [posts,setPosts] = useState([]);
@@ -38,8 +39,15 @@ function Homepage() {
     function getPosts(){
         get(child(dbRef, `posts/`)).then((snapshot) => {
             if (snapshot.exists()) {
-                var data = snapshot.val().reverse().slice(0,3);
-                setPosts(data)
+                let data = convertObjToArray(snapshot.val()).reverse();
+                let arrOfPosts = [];
+                data.forEach(function (post){
+                    if(!post.isDeleted){
+                        arrOfPosts.push(post)
+                    }
+                })
+                arrOfPosts = arrOfPosts.slice(0,3)
+                setPosts(arrOfPosts)
             } else {
                 setPosts([])
             }
@@ -67,9 +75,11 @@ function Homepage() {
             <div className={styles.newest_posts}>
                 <p className="page_title">Последние посты</p>
                 {posts.map((item)=>{
-                    return(
-                        <Post id={item.id} img={item.postPicture} text={item.text} title={item.title} key={item.id}/>
-                    )
+                    if(!item.isDeleted){
+                        return (
+                            <Post id={item.id} img={item.postPicture} text={item.text} name={item.name} key={item.id}/>
+                        )
+                    }
                 })}
             </div>
         </div>

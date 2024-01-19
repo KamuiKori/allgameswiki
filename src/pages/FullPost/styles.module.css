@@ -51,10 +51,51 @@
     width: 100%;
     display: flex;
     justify-content: space-between;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+    flex-direction: column;
 }
 .post_info p {
     font-size: 16px;
+}
+.line{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 20px;
+    justify-content: space-between;
+}
+.action_btns{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    width: 100%;
+    justify-content: flex-end;
+}
+.edit_btn{
+    width: 100%;
+    max-width: 120px;
+    height: 30px;
+    cursor: pointer;
+    border-radius: 5px;
+    background: #99A3A6;
+    border: none;
+    color: #fff;
+    font-size: 12px;
+    align-self: flex-end;
+    margin-right: 10px;
+}
+.delete_btn{
+    width: 100%;
+    max-width: 120px;
+    height: 30px;
+    cursor: pointer;
+    border-radius: 5px;
+    background: #99A3A6;
+    border: none;
+    color: #fff;
+    font-size: 12px;
+    align-self: flex-end;
+    margin-right: 10px;
 }
 .post_text_wrapper{
     float: right;

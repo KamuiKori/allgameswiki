@@ -11,6 +11,7 @@ import Auth from "../pages/Auth";
 import Reg from "../pages/Reg";
 import Category from "../pages/Category";
 import SearchResults from "../pages/SearchResults";
+import AllPosts from "../pages/AllPosts";
 
 export  const  PATHS = {
     MAIN:'/',
@@ -23,7 +24,8 @@ export  const  PATHS = {
     REG:'/reg',
     SEARCH:"/search",
     AUTH:'/auth',
-    SEARCH_RESULTS:'/search-results/search/:searchValue'
+    SEARCH_RESULTS:'/search-results/search/:searchValue',
+    ALL_POSTS:'/all_posts',
 }
 
 export const router = (data) =>(
@@ -39,5 +41,6 @@ export const router = (data) =>(
         <Route path={PATHS.SEARCH} element={<Search/>}/>
         <Route path={PATHS.CATEGORY} element={<Category/>}/>
         <Route path={PATHS.SEARCH_RESULTS} element={<SearchResults/>}/>
+        <Route path={PATHS.ALL_POSTS} element={<AllPosts/>}/>
     </Routes>
 )

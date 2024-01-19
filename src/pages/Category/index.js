@@ -5,6 +5,7 @@ import styles from "../Category/style.module.css";
 import {setUserInfo} from "../../store/slices/userSlice";
 import Post from "../../Components/Post";
 import {logDOM} from "@testing-library/react";
+import convertObjToArray from "../../hooks/convertObjToArray";
 
 function Category(){
     const {id} = useParams();
@@ -14,7 +15,7 @@ function Category(){
     function getPosts(){
         get(child(dbRef, `posts/`)).then((snapshot) => {
             if (snapshot.exists()) {
-                var data = snapshot.val();
+                var data = convertObjToArray(snapshot.val());
                 var filtredPosts = data.filter((post)=>post.category === id)
                 setFiltredPosts(filtredPosts)
             } else {
@@ -49,10 +50,12 @@ function Category(){
                 }
             </p>
             {
-                filtredPosts.map((post)=>{
-                    return(
-                        <Post img={post.postPicture} text={post.text} title={post.title} key={post.id} id={post.id}/>
-                    )
+                filtredPosts.map((item)=>{
+                    if(!item.isDeleted){
+                        return (
+                            <Post id={item.id} img={item.postPicture} text={item.text} name={item.name} key={item.id}/>
+                        )
+                    }
                 })
             }
         </div>

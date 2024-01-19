@@ -7,18 +7,42 @@ import {useDispatch, useSelector} from "react-redux";
 import {setUserInfo, setUserNickname,setUserDesc,setUserAvatar} from "../../store/slices/userSlice";
 import { getStorage, uploadBytesResumable,getDownloadURL } from "firebase/storage";
 import { initializeApp } from "firebase/app";
+import convertObjToArray from "../../hooks/convertObjToArray";
+import {useParams} from "react-router-dom";
 
 
 function Profile() {
-    const userId = localStorage.getItem("userId");
+    //const userId = localStorage.getItem("userId");
     const dbRef = ref(getDatabase());
-    const user = useSelector((state) => state.user);
+    //const user = useSelector((state) => state.user);
+
     const dispatch = useDispatch();
     const [isEditing, setIsEditing] = useState(false);
     const [editUserAvatar, setEditUserAvatar] = useState(null);
     const [nickname, setNickname] = useState("");
     const [userInfoState, setUserInfoState] = useState("");
     const storage = getStorage();
+    const userId = useParams().id;
+    const [user, setUser] = useState({});
+    const [editable,setEditable] = useState(true)
+
+    useEffect(()=>{
+        get(child(dbRef, `users/${userId}`)).then((snapshot) => {
+            if (snapshot.exists()) {
+                setUser(snapshot.val());
+                if(userId !== localStorage.getItem('userId')){
+                    setEditable(false);
+                }
+                else{
+                    setEditable(true)
+                }
+            } else {
+
+            }
+        }).catch((error) => {
+            console.error(error);
+        });
+    },[userId])
 
     function editProfileHandler(direction) {
         if (direction === "edit") {
@@ -89,7 +113,8 @@ function Profile() {
     function getPosts(){
         get(child(dbRef, `posts/`)).then((snapshot) => {
             if (snapshot.exists()) {
-                var data = snapshot.val();
+                var data = convertObjToArray(snapshot.val());
+                data = data.filter((post)=>post.userId.toString() === userId.toString()).reverse();
                 setPosts(data)
             } else {
                 setPosts([])
@@ -100,20 +125,20 @@ function Profile() {
     }
     useEffect(()=>{
         getPosts();
-    },[])
+    },[userId])
     return (
         <>
             <div className={styles.user_info_wrap}>
                 <div className={styles.side_block}>
                     {
-                        !isEditing ? <img src={user.avatar} alt="" id="avatar" className={styles.profile_pic}/> :
+                        !isEditing ? <img src={user.profilePicture} alt="" id="avatar" className={styles.profile_pic}/> :
                             <input type="file" className={styles.profile_pic_input}
                                    onChange={(e) => avatarChangeHandler(e)} accept=".jpg, .jpeg, .png"/>
                     }
                     {
                         !isEditing ?
-                            <button className={styles.edit} onClick={() => editProfileHandler("edit")}>Редактировать
-                                профиль</button> :
+                            editable?<button className={styles.edit} onClick={() => editProfileHandler("edit")}>Редактировать
+                                профиль</button>:"" :
                             <div className={styles.editing_btns}>
                                 <button className={styles.edit_btn} onClick={saveInfoHandler}>Сохранить</button>
                                 <button className={styles.edit_btn}
@@ -138,9 +163,11 @@ function Profile() {
             <p className={styles.user_mat_title}>Материалы пользователя</p>
             <div className={styles.user_posts}>
                 {posts.map((item) => {
-                    return (
-                        <Post id={item.id} img={item.postPicture} text={item.text} title={item.title}/>
-                    )
+                    if(!item.isDeleted){
+                        return (
+                            <Post id={item.id} img={item.postPicture} text={item.text} name={item.name} key={item.id}/>
+                        )
+                    }
                 })}
             </div>
         </>

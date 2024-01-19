@@ -9,7 +9,6 @@ import createDateHook from "../../hooks/createDate";
 function CreateNew({categories}){
 
     const [postName,setPostName] = useState("");
-    const [postTitle,setPostTitle] = useState("");
     const [postText,setPostText] = useState("");
     const [postPicture,setPostPicture] = useState("");
     const [postCategory,setPostCategory] = useState("CS2");
@@ -20,13 +19,11 @@ function CreateNew({categories}){
     function changePostNameHandler(e){
         setPostName(e.target.value)
     }
-    function changePostTitleHandler(e){
-        setPostTitle(e.target.value)
-    }
     function changePostTextHandler(e){
         setPostText(e.target.value)
     }
     function changePostPicture(e){
+        console.log(e.target)
         setPostPicture(e.target.files[0])
     }
     function changePostCategory(e){
@@ -37,15 +34,15 @@ function CreateNew({categories}){
         let createDate = createDateHook()
         var data = {
             name: postName,
-            title:postTitle,
             text:postText,
             category:postCategory.replaceAll(" ",""),
             userId:localStorage.getItem("userId"),
             authorNickname:user.nickname,
             createDate:createDate,
             comments:[],
+            isDeleted:false
         };
-        saveInfoHandler(data);
+        //saveInfoHandler(data);
     }
     function saveInfoHandler(data) {
         const dbRef = ref(getDatabase());
@@ -93,12 +90,6 @@ function CreateNew({categories}){
                             Название материала
                         </p>
                         <input type="text" name="name" required className={styles.input} id="name" onChange={(e)=>changePostNameHandler(e)} value={postName}/>
-                    </div>
-                    <div className={styles.input_wrap}>
-                        <p className={styles.input_title}>
-                            Заголовок материала
-                        </p>
-                        <input type="text" name="title" required className={styles.input} id="title" onChange={(e)=>changePostTitleHandler(e)} value={postTitle}/>
                     </div>
                     <div className={styles.input_wrap}>
                         <p className={styles.input_title}>

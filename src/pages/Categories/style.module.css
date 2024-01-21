@@ -15,3 +15,53 @@
     flex-direction: row;
     justify-content: center;
 }
+.add_cat_btn{
+    color: #000;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    text-decoration: none;
+    padding:17px;
+    border-radius: 10px;
+    background: #CAD7DB;
+    margin-right: 15px;
+    border: none;
+    margin-top: 15px;
+    cursor: pointer;
+    transition: .2s ease-in;
+}
+.add_cat_btn:hover{
+    background: #7E898C;
+    color: #fff;
+}
+.add_cat_wrap{
+    margin-top: 20px;
+}
+.buttons_wrapper{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+}
+.buttons_wrapper button{
+    background: #99A3A6;
+    color: #fff;
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 100px;
+    height: 45px;
+    font-size: 15px;
+    transition: .2s ease-in;
+}
+.buttons_wrapper button:hover{
+    background: #7E898C;
+    color: #fff;
+}
+.error_text{
+    font-size: 14px;
+    color: red;
+    margin-bottom: 15px;
+}

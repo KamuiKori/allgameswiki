@@ -4,7 +4,6 @@
     flex-direction: column;
     border-radius: 10px;
     background: #CAD7DB;
-    margin-top: 40px;
     padding:10px 15px ;
 }
 .title{
@@ -40,4 +39,8 @@
     color: #fff;
     font-size: 16px;
     align-self: flex-end;
+    transition: .2s ease-in;
+}
+.btn:hover{
+    background: #7E898C;
 }

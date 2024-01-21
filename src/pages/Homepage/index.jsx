@@ -9,7 +9,7 @@ import {child, get, getDatabase, ref} from "firebase/database";
 import convertObjToArray from '../../hooks/convertObjToArray'
 
 function Homepage() {
-    const [posts,setPosts] = useState([]);
+    const [posts, setPosts] = useState([]);
     const settings = {
         dots: true,
         infinite: true,
@@ -36,17 +36,17 @@ function Homepage() {
     ]
     const dbRef = ref(getDatabase());
 
-    function getPosts(){
+    function getPosts() {
         get(child(dbRef, `posts/`)).then((snapshot) => {
             if (snapshot.exists()) {
                 let data = convertObjToArray(snapshot.val()).reverse();
                 let arrOfPosts = [];
-                data.forEach(function (post){
-                    if(!post.isDeleted){
+                data.forEach(function (post) {
+                    if (!post.isDeleted) {
                         arrOfPosts.push(post)
                     }
                 })
-                arrOfPosts = arrOfPosts.slice(0,3)
+                arrOfPosts = arrOfPosts.slice(0, 3)
                 setPosts(arrOfPosts)
             } else {
                 setPosts([])
@@ -56,33 +56,26 @@ function Homepage() {
         });
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         getPosts();
-    },[])
+    }, [])
     return (
-        <div className={styles.home_wrapper}>
-            <div className={styles.slider_wrapper}>
-                <Slider {...settings}>
-                    {sliderItems.map((item) => {
-                        return (
-                            <a href={item.link} target="_blank">
-                                <img src={item.img} alt=""/>
-                            </a>
-                        )
-                    })}
-                </Slider>
+        <>
+            <div className={styles.about_us}>
+                <img src="https://firebasestorage.googleapis.com/v0/b/allgameswiki-b3ce4.appspot.com/o/postsPictures%2F%D0%A1%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D0%B0%20%D0%BF%D0%BE%D0%B8%D1%81%D0%BA%D0%B0%20%D0%B8%D1%82%D0%BE%D0%B3%D0%BE%D0%B2%D1%8B%D0%B9%20%D0%B4%D0%B8%D0%B7%D0%B0%D0%B9%D0%BD%20(2).png?alt=media&token=e3b499cf-5703-41b1-a414-22032b29ab5e" alt=""/>
             </div>
             <div className={styles.newest_posts}>
-                <p className="page_title">Последние посты</p>
-                {posts.map((item)=>{
-                    if(!item.isDeleted){
+                <p className="page_title">Последние материалы</p>
+                {posts.map((item) => {
+                    if (!item.isDeleted) {
                         return (
                             <Post id={item.id} img={item.postPicture} text={item.text} name={item.name} key={item.id}/>
                         )
                     }
                 })}
             </div>
-        </div>
+        </>
+
     )
 }
 

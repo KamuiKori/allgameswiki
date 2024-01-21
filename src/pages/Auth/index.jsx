@@ -31,7 +31,7 @@ function Auth(){
                             "info": snapshot.val().info,
                             "avatar": snapshot.val().profilePicture,
                             "email": snapshot.val().email,
-                            "isAdmin":localStorage.getItem('isAdmin')
+                            "isAdmin":snapshot.val().isAdmin
                         }));
                         localStorage.setItem('isAdmin',snapshot.val().isAdmin);
                         navigate('/');

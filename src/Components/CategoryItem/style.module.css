@@ -3,10 +3,15 @@
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
-    line-height: normal;
     text-decoration: none;
     padding:17px;
     border-radius: 10px;
     background: #CAD7DB;
     margin-right: 15px;
+    line-height: 55px;
+    transition: .2s ease;
+}
+.category_item:hover{
+    background: #7E898C;
+    color: #fff;
 }

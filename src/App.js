@@ -5,7 +5,7 @@ import {BrowserRouter} from "react-router-dom";
 import {router} from "./router";
 import Footer from "./Components/Footer";
 import {useEffect, useState} from "react";
-import {child, get, getDatabase, ref} from "firebase/database";
+import {child, get, getDatabase, ref, set} from "firebase/database";
 import {useDispatch} from "react-redux";
 import {setIsAdmin, setUserInfo} from "./store/slices/userSlice";
 
@@ -30,8 +30,9 @@ function App() {
                         "avatar": snapshot.val().profilePicture,
                         "email": snapshot.val().email,
                         "id": localStorage.getItem('userId'),
-                        "isAdmin":localStorage.getItem('isAdmin')
+                        "isAdmin":snapshot.val().isAdmin
                     }));
+                    localStorage.setItem("isAdmin",snapshot.val().isAdmin)
                 } else {
                     console.log("No data available");
                 }
@@ -39,22 +40,6 @@ function App() {
                 console.error(error);
             });
         }
-        get(child(dbRef, `categories/`)).then((snapshot) => {
-            if (snapshot.exists()) {
-                if(cats.length === 0){
-                    for(let key in snapshot.val()){
-                        let link = snapshot.val()[key].link
-                        let name = snapshot.val()[key].id
-                        cats.push({"id":name,"link":link})
-                    }
-                    setCategories(cats)
-                }
-            } else {
-                console.log("No data available");
-            }
-        }).catch((error) => {
-            console.error(error);
-        });
     },[])
 
     const data = {

@@ -22,6 +22,7 @@ function Reg() {
             email: email,
             nickname:"Пользователь №" + userId,
             info:"Описание профиля",
+            isAdmin:false,
             profilePicture:"https://sun9-43.userapi.com/impg/BwgB6HGhSb9QFMM3JuL4Ws_HaLoHbKZSi0Rs0g/sOhV0NLsSsM.jpg?size=295x295&quality=96&sign=f315d8710f3195fc3950cbbfc6448da5&type=album"
         });
     }

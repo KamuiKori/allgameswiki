@@ -7,17 +7,21 @@ import Post from "../../Components/Post";
 import {logDOM} from "@testing-library/react";
 import convertObjToArray from "../../hooks/convertObjToArray";
 
-function Category(){
+function Category() {
     const {id} = useParams();
 
     const dbRef = ref(getDatabase());
-    const [filtredPosts,setFiltredPosts] = useState([]);
-    function getPosts(){
+    const [filtredPosts, setFiltredPosts] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+
+    function getPosts() {
+        setIsLoading(true);
         get(child(dbRef, `posts/`)).then((snapshot) => {
             if (snapshot.exists()) {
                 var data = convertObjToArray(snapshot.val());
-                var filtredPosts = data.filter((post)=>post.category === id)
-                setFiltredPosts(filtredPosts)
+                var filtredPosts = data.filter((post) => post.category === id).reverse();
+                setFiltredPosts(filtredPosts);
+                setIsLoading(false);
             } else {
                 console.log("No data available");
             }
@@ -25,9 +29,11 @@ function Category(){
             console.error(error);
         });
     }
-    const [categoryName,setCategoryName] = useState("");
 
-    useEffect(()=>{
+    const [categoryName, setCategoryName] = useState("");
+
+
+    useEffect(() => {
         get(child(dbRef, `categories/${id}`)).then((snapshot) => {
             if (snapshot.exists()) {
                 setCategoryName(snapshot.val().id)
@@ -37,12 +43,20 @@ function Category(){
         }).catch((error) => {
             console.error(error);
         });
-    },[]);
-    useEffect(()=>{
+    }, []);
+    useEffect(() => {
         getPosts();
-    },[])
+    }, [])
 
-    return(
+    if (isLoading) {
+        return <>
+            <img className="loader"
+                 src="https://firebasestorage.googleapis.com/v0/b/allgameswiki-b3ce4.appspot.com/o/postsPictures%2Floading.gif?alt=media&token=d1e259f2-cbcf-4633-ba85-20f004bcda7f"
+                 alt=""/>
+        </>
+    }
+
+    return (
         <div className={styles.category_post_wrapper}>
             <p className="page_title">
                 {
@@ -50,8 +64,8 @@ function Category(){
                 }
             </p>
             {
-                filtredPosts.map((item)=>{
-                    if(!item.isDeleted){
+                filtredPosts.map((item) => {
+                    if (!item.isDeleted) {
                         return (
                             <Post id={item.id} img={item.postPicture} text={item.text} name={item.name} key={item.id}/>
                         )
@@ -61,4 +75,5 @@ function Category(){
         </div>
     )
 }
+
 export default Category;

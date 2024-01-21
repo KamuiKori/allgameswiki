@@ -44,3 +44,19 @@
     letter-spacing: -0.2px;
     align-self: flex-start;
 }
+.delete_btn{
+    width: 120px;
+    background: #99A3A6;
+    border-radius: 5px;
+    height: 30px;
+    font-size: 12px;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    align-self: flex-end;
+    transition: .2s ease-in;
+}
+.delete_btn:hover{
+    background: #7E898C;
+    color: #fff;
+}

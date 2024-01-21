@@ -25,11 +25,14 @@ function Profile() {
     const userId = useParams().id;
     const [user, setUser] = useState({});
     const [editable,setEditable] = useState(true)
+    const [isLoading,setIsLoading] = useState(false);
 
     useEffect(()=>{
+        setIsLoading(true)
         get(child(dbRef, `users/${userId}`)).then((snapshot) => {
             if (snapshot.exists()) {
                 setUser(snapshot.val());
+                setIsLoading(false);
                 if(userId !== localStorage.getItem('userId')){
                     setEditable(false);
                 }
@@ -42,7 +45,7 @@ function Profile() {
         }).catch((error) => {
             console.error(error);
         });
-    },[userId])
+    },[userId,isEditing])
 
     function editProfileHandler(direction) {
         if (direction === "edit") {
@@ -68,8 +71,6 @@ function Profile() {
             }))
         }
         writeUserDataToDatabase(data);
-
-        setIsEditing(false);
     }
 
     function writeUserDataToDatabase(data){
@@ -85,17 +86,18 @@ function Profile() {
                 },
                 () => {
                     getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                        data = {};
                         data["profilePicture"] = downloadURL;
                         dispatch(setUserAvatar({
                             "avatar":downloadURL
-                        }))
-                        update(child(dbRef, `users/${userId}`),data).then((e)=>console.log(e))
+                        }));
+                        update(child(dbRef, `users/${userId}`),data).then((e)=>setIsEditing(false))
                     });
                 }
             );
         }
-        update(child(dbRef, `users/${userId}`),data).then((e)=>console.log(e))
+        else{
+            update(child(dbRef, `users/${userId}`),data).then((e)=>setIsEditing(false))
+        }
     }
 
     function avatarChangeHandler(e) {
@@ -111,11 +113,13 @@ function Profile() {
     const [posts,setPosts] = useState([]);
 
     function getPosts(){
+        setIsLoading(true)
         get(child(dbRef, `posts/`)).then((snapshot) => {
             if (snapshot.exists()) {
                 var data = convertObjToArray(snapshot.val());
                 data = data.filter((post)=>post.userId.toString() === userId.toString()).reverse();
                 setPosts(data)
+                setIsLoading(false)
             } else {
                 setPosts([])
             }
@@ -126,6 +130,14 @@ function Profile() {
     useEffect(()=>{
         getPosts();
     },[userId])
+
+    if (isLoading) {
+        return <>
+            <img className="loader"
+                 src="https://firebasestorage.googleapis.com/v0/b/allgameswiki-b3ce4.appspot.com/o/postsPictures%2Floading.gif?alt=media&token=d1e259f2-cbcf-4633-ba85-20f004bcda7f"
+                 alt=""/>
+        </>
+    }
     return (
         <>
             <div className={styles.user_info_wrap}>
@@ -149,6 +161,7 @@ function Profile() {
 
                 </div>
                 <div className={styles.user_info}>
+                    <p className={styles.role}>Роль: {user.isAdmin?"администратор":"пользователь"}</p>
                     {!isEditing ? <p className={styles.user_name}>{user.nickname}</p> :
                         <input type="text" name="user_nickname" className={styles.user_nickname_input} value={nickname} placeholder="Введи свой никнейм"
                                onChange={(e) => changeNicknameHandler(e)}/>}

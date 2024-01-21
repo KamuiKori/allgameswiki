@@ -1,12 +1,38 @@
 import styles from './style.module.css'
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {child, get, getDatabase, ref, set} from "firebase/database";
 import {useSelector} from "react-redux";
 import {getDownloadURL, getStorage, ref as sRef, uploadBytesResumable} from "firebase/storage";
 import {setUserInfo} from "../../store/slices/userSlice";
 import {useNavigate} from "react-router-dom";
 import createDateHook from "../../hooks/createDate";
-function CreateNew({categories}){
+function CreateNew(){
+    let cats = [];
+    const dbRef = ref(getDatabase());
+    const [categories,setCategories] = useState([]);
+    const [isError,setIsError] = useState(false);
+    function getCategories(){
+        get(child(dbRef, `categories/`)).then((snapshot) => {
+            if (snapshot.exists()) {
+                if(cats.length === 0){
+                    for(let key in snapshot.val()){
+                        let link = snapshot.val()[key].link
+                        let name = snapshot.val()[key].id
+                        cats.push({"id":name,"link":link})
+                    }
+                    setCategories(cats)
+                }
+            } else {
+                console.log("No data available");
+            }
+        }).catch((error) => {
+            console.error(error);
+        });
+    }
+
+    useEffect(()=>{
+        getCategories();
+    },[])
 
     const [postName,setPostName] = useState("");
     const [postText,setPostText] = useState("");
@@ -23,7 +49,6 @@ function CreateNew({categories}){
         setPostText(e.target.value)
     }
     function changePostPicture(e){
-        console.log(e.target)
         setPostPicture(e.target.files[0])
     }
     function changePostCategory(e){
@@ -42,7 +67,13 @@ function CreateNew({categories}){
             comments:[],
             isDeleted:false
         };
-        //saveInfoHandler(data);
+        if(!postName || !postText || !localStorage.getItem("userId") ||!postPicture){
+            setIsError(true);
+        }
+        else{
+            setIsError(false);
+            saveInfoHandler(data);
+        }
     }
     function saveInfoHandler(data) {
         const dbRef = ref(getDatabase());
@@ -54,28 +85,28 @@ function CreateNew({categories}){
                 postId = 1
                 data["id"] = postId
             }
+            const postPictureName = postId + "picture"
+            const storageRef = sRef(storage, 'postsPictures/' + postPictureName);
+            const uploadTask = uploadBytesResumable(storageRef, postPicture);
+            uploadTask.on('state_changed',
+                (snapshot) => {
+                },
+                (error) => {
+                    console.error(error.code)
+                },
+                () => {
+                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        data["postPicture"] = downloadURL;
+                        const db = ref(getDatabase());
+                        set(child(db, `posts/${postId}`),data);
+                    }).then(()=>{
+                        navigate(`/posts/${postId}`)
+                    });
+                }
+            );
         }).catch((error) => {
             console.error(error);
         });
-        const postPictureName = postName + "picture"
-        const storageRef = sRef(storage, 'postsPictures/' + postPictureName);
-        const uploadTask = uploadBytesResumable(storageRef, postPicture);
-        uploadTask.on('state_changed',
-            (snapshot) => {
-            },
-            (error) => {
-                console.error(error.code)
-            },
-            () => {
-                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    data["postPicture"] = downloadURL;
-                    const db = ref(getDatabase());
-                    set(child(db, `posts/${postId}`),data);
-                }).then(()=>{
-                    navigate(`/posts/${postId}`)
-                });
-            }
-        );
     }
 
     return(
@@ -117,6 +148,9 @@ function CreateNew({categories}){
                         </p>
                         <input type="file" required name="picture" className={styles.input} id="picture" onChange={(e) => changePostPicture(e)} accept=".jpg, .jpeg, .png"/>
                     </div>
+                    {
+                        isError?<p className={styles.error_text}>Ошибка: все поля должны быть заполнены</p>:""
+                    }
                     <button className="submit_btn" onClick={(e)=>submitHandler(e)}>
                         Создать материал
                     </button>

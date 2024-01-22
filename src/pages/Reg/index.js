@@ -59,13 +59,19 @@ function Reg() {
                     if(error.code === "auth/invalid-email"){
                         setErrorText("Email должен содержать @ и доменное имя")
                     }
-                    if(error.code === "auth/weak-password"){
+                    else if(error.code === "auth/weak-password"){
                         setErrorText("Длинна пароля должна быть более 5 символов")
                     }
-                    if(error.code === "auth/email-already-in-use"){
+                    else if(error.code === "auth/email-already-in-use"){
                         setErrorText("Пользователь с таким email уже зарегистрирован")
                     }
+                    else{
+                        setErrorText("Поля должны быть заполнены")
+                    }
                 })
+        }
+        else{
+            setErrorText("Поля должны быть заполнены")
         }
     }
 
@@ -87,16 +93,12 @@ function Reg() {
                         Регистрация
                     </p>
                     <div className="input_wrap">
-                        <p className={styles.input_title}>
-                            Email
-                        </p>
-                        <input type="email" name="email" placeholder="Email" onChange={(e) =>setNickname(e.target.value)} value={nickname}/>
+                        <input type="email" name="email" placeholder="Email"
+                               onChange={(e) =>setNickname(e.target.value)} value={nickname}/>
                     </div>
                     <div className="input_wrap">
-                        <p className={styles.input_title}>
-                            Пароль
-                        </p>
-                        <input type="password" name="nickname" placeholder="Пароль" onChange={(e) =>setPassword(e.target.value)} value={password}/>
+                        <input type="password" name="nickname" placeholder="Пароль"
+                               onChange={(e) =>setPassword(e.target.value)} value={password}/>
                     </div>
                     <ShowErrorMessage text={errorText}/>
                     <button className="submit_btn" onClick={(e)=>clickHandler(e)}>

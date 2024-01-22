@@ -63,8 +63,10 @@ function Auth(){
                     <p className="form_title">
                         Авторизация
                     </p>
-                        <input type="text" name="nickname" placeholder="Никнейм" value={nickname} onChange={(e) =>setNickname(e.target.value)}/>
-                        <input type="password" name="nickname" placeholder="Пароль" value={password} onChange={(e)=>setPassword(e.target.value)}/>
+                        <input type="text" name="nickname" placeholder="Email" value={nickname}
+                               onChange={(e) =>setNickname(e.target.value)}/>
+                        <input type="password" name="nickname" placeholder="Пароль" value={password}
+                               onChange={(e)=>setPassword(e.target.value)}/>
                     {<ShowErrorMessage/>}
                     <button className="submit_btn" onClick={(e)=>clickHandler(nickname,password,e)}>
                         Авторизоваться

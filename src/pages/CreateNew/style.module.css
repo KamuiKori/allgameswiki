@@ -45,6 +45,7 @@
 .input{
     width: 100%;
     max-width:762px;
+    margin-bottom: 0;
 }
 .textarea{
     width: 100%;

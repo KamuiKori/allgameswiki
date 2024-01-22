@@ -11,10 +11,6 @@ import {setIsAdmin, setUserInfo} from "./store/slices/userSlice";
 
 
 function App() {
-    const [posts, setPosts] = useState([]);
-    const [isLoadingPosts,setIsLoadingPosts] = useState(false)
-    const [isErrorLoading,setIsLoadingError] = useState(false);
-
     const [categories,setCategories] = useState([]);
     let cats = [];
     const dbRef = ref(getDatabase());
